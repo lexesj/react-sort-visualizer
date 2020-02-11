@@ -3,7 +3,7 @@ import "./SortVisualizer.css";
 
 const ARR_LEN = 100;
 const MIN_NUM = 5;
-const MAX_NUM = 1000;
+const MAX_NUM = 80;
 
 export default class SortVisualizer extends Component {
   constructor(props) {
@@ -73,18 +73,30 @@ export default class SortVisualizer extends Component {
   }
 
   render() {
+    const { arr } = this.state;
+
     return (
       <>
         <div className="array-container">
-          {this.state.arr.map((bar, index) => (
-            <div className="array-bar" key={index}>
-              {bar}
-            </div>
+          {arr.map((barHeight, index) => (
+            <div
+              className="array-bar"
+              style={{ height: `${barHeight}vmin` }}
+              key={index}
+            ></div>
           ))}
-          <button onClick={this.initialiseArray}>Create new array</button>
-          <button onClick={this.mergeSort}>Merge sort</button>
-          <button onClick={this.insertionSort}>Insertion sort</button>
         </div>
+        <footer>
+          <button className="app-button" onClick={this.initialiseArray}>
+            Create new array
+          </button>
+          <button className="app-button" onClick={this.mergeSort}>
+            Merge sort
+          </button>
+          <button className="app-button" onClick={this.insertionSort}>
+            Insertion sort
+          </button>
+        </footer>
       </>
     );
   }
