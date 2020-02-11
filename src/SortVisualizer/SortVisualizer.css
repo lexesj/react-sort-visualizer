@@ -1,5 +1,26 @@
+* {
+  font-family: "Open Sans", sans-serif;
+  font-size: calc(10px + 2vmin);
+}
+
 .array-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 80vmin;
 }
 
 .array-bar {
+  background-color: brown;
+  width: 10px;
+  margin: 2px;
+}
+
+.app-button {
+  border: none;
+  background-color: transparent;
+}
+
+.app-button:hover {
+  color: rgb(40, 98, 165);
 }
