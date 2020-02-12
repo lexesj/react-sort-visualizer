@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
-import SortVisualizer from './SortVisualizer/SortVisualizer';
+import React from "react";
+import "./App.css";
+import SortVisualizer from "./sortVisualizer/SortVisualizer";
 
 function App() {
   return (
