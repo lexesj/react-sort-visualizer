@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./SortVisualizer.css";
+import { getMergeSortAnimations } from "../algorithms/MergeSort";
 
 const ARR_LEN = 100;
 const MIN_NUM = 5;
 const MAX_NUM = 80;
+const DELAY = 5;
+const ACCESSED_COLOUR = "blue";
 
 export default function SortVisualizer(props) {
-  const [arr, updateArr] = useState([]);
+  const [arr, setArr] = useState([]);
+  const containerRef = useRef(null);
 
   useEffect(initialiseArray, []);
 
@@ -15,55 +19,52 @@ export default function SortVisualizer(props) {
     for (let i = 0; i < ARR_LEN; i++) {
       arr.push(randIntRange(MIN_NUM, MAX_NUM));
     }
-    updateArr(arr);
+    setArr(arr);
   }
 
   function mergeSort() {
-    const copy = arr.slice();
-    const len = copy.length;
-    const aux = Array(len);
-    const animations = [];
-    mergeSortHelper(copy, aux, 0, len - 1, animations);
-    updateArr(copy);
-    return animations;
-  }
-
-  function mergeSortHelper(arr, aux, left, right, animations) {
-    if (right <= left) return;
-    const mid = left + Math.floor((right - left) / 2);
-    mergeSortHelper(arr, aux, left, mid, animations);
-    mergeSortHelper(arr, aux, mid + 1, right, animations);
-    merge(arr, aux, left, mid, right, animations);
-  }
-
-  function merge(arr, aux, left, mid, right, animations) {
-    for (let i = left; i <= right; i++) aux[i] = arr[i];
-    let i = left;
-    let j = mid + 1;
-    for (let k = left; k <= right; k++) {
-      animations.push([i, j]);
-      if (i > mid) arr[k] = aux[j++];
-      else if (j > right) arr[k] = aux[i++];
-      else if (aux[j] < aux[i]) arr[k] = aux[j++];
-      else arr[k] = aux[i++];
-      animations.push(k);
-    }
-  }
-
-  function insertionSort() {
-    const copy = arr.slice();
-    for (let i = 1; i < copy.length; i++) {
-      for (let j = i - 1; j >= 0; j--) {
-        if (copy[j + 1] < copy[j]) swap(copy, j, j + 1);
-        else break;
+    const animations = getMergeSortAnimations(arr);
+    animations.forEach(([comparison, swapped], index) => {
+      if (!swapped) {
+        if (comparison.length === 2) {
+          const [i, j] = comparison;
+          setTimeout(() => {
+            animateArrayAccess(i);
+            animateArrayAccess(j);
+          }, index * DELAY);
+        } else {
+          const [i] = comparison;
+          animateArrayAccess(i);
+        }
+      } else {
+        setTimeout(() => {
+          setArr(prevArr => {
+            const [k, newValue] = comparison;
+            const newArr = [...prevArr];
+            newArr[k] = newValue;
+            return newArr;
+          });
+        }, index * DELAY);
       }
-    }
-    updateArr(copy);
+    });
+  }
+
+  function insertionSort() {}
+
+  function animateArrayAccess(index) {
+    const arrayBars = containerRef.current.children;
+    const arrayBarStyle = arrayBars[index].style;
+    setTimeout(() => {
+      arrayBarStyle.backgroundColor = ACCESSED_COLOUR;
+    }, DELAY);
+    setTimeout(() => {
+      arrayBarStyle.backgroundColor = "";
+    }, DELAY * 2);
   }
 
   return (
     <>
-      <div className="array-container">
+      <div className="array-container" ref={containerRef}>
         {arr.map((barHeight, index) => (
           <div
             className="array-bar"
@@ -76,14 +77,10 @@ export default function SortVisualizer(props) {
         <button className="app-button" onClick={initialiseArray}>
           Create new array
         </button>
-        <button className="app-button" id="merge-sort" onClick={mergeSort}>
+        <button className="app-button" onClick={mergeSort}>
           Merge sort
         </button>
-        <button
-          className="app-button"
-          id="insertion-sort"
-          onClick={insertionSort}
-        >
+        <button className="app-button" onClick={insertionSort}>
           Insertion sort
         </button>
       </footer>
@@ -93,9 +90,3 @@ export default function SortVisualizer(props) {
 
 const randIntRange = (start, end) =>
   Math.floor(Math.random() * (end - start + 1) + start);
-
-const swap = (arr, index1, index2) => {
-  const temp = arr[index1];
-  arr[index1] = arr[index2];
-  arr[index2] = temp;
-};
