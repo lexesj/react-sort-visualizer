@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./SortVisualizer.css";
+import { swap } from "../algorithms/Utility";
 import { getMergeSortAnimations } from "../algorithms/MergeSort";
+import { getInsertionSortAnimations } from "../algorithms/InsertionSort";
 
 const ARR_LEN = 100;
 const MIN_NUM = 5;
@@ -25,31 +27,46 @@ export default function SortVisualizer(props) {
   function mergeSort() {
     const animations = getMergeSortAnimations(arr);
     animations.forEach(([comparison, swapped], index) => {
-      if (!swapped) {
-        if (comparison.length === 2) {
-          const [i, j] = comparison;
-          setTimeout(() => {
+      setTimeout(() => {
+        if (!swapped) {
+          if (comparison.length === 2) {
+            const [i, j] = comparison;
             animateArrayAccess(i);
             animateArrayAccess(j);
-          }, index * DELAY);
+          } else {
+            const [i] = comparison;
+            animateArrayAccess(i);
+          }
         } else {
-          const [i] = comparison;
-          animateArrayAccess(i);
-        }
-      } else {
-        setTimeout(() => {
           setArr(prevArr => {
             const [k, newValue] = comparison;
             const newArr = [...prevArr];
             newArr[k] = newValue;
             return newArr;
           });
-        }, index * DELAY);
-      }
+        }
+      }, index * DELAY);
     });
   }
 
-  function insertionSort() {}
+  function insertionSort() {
+    const animations = getInsertionSortAnimations(arr);
+    animations.forEach(([comparison, swapped], index) => {
+      setTimeout(() => {
+        const [i, j] = comparison;
+        if (!swapped) {
+          animateArrayAccess(i);
+          animateArrayAccess(j);
+        } else {
+          setArr(prevArr => {
+            const newArr = [...prevArr];
+            swap(newArr, i, j);
+            return newArr;
+          });
+        }
+      }, index * DELAY);
+    });
+  }
 
   function animateArrayAccess(index) {
     const arrayBars = containerRef.current.children;
