@@ -1,6 +1,6 @@
 * {
   font-family: "Open Sans", sans-serif;
-  font-size: calc(10px + 2vmin);
+  font-size: 1em;
 }
 
 .array-container {
@@ -12,6 +12,7 @@
 
 .array-bar {
   background-color: brown;
+  border-radius: 3px;
   width: 10px;
   margin: 2px;
 }
