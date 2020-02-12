@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./SortVisualizer.css";
-import { swap } from "../algorithms/Utility";
-import { getMergeSortAnimations } from "../algorithms/MergeSort";
+import getQuickSortAnimations from "../algorithms/QuickSort";
 import { getInsertionSortAnimations } from "../algorithms/InsertionSort";
+import { getMergeSortAnimations } from "../algorithms/MergeSort";
 
 const ARR_LEN = 100;
 const MIN_NUM = 5;
@@ -26,6 +26,20 @@ export default function SortVisualizer(props) {
 
   function mergeSort() {
     const animations = getMergeSortAnimations(arr);
+    animateArrayUpdate(animations);
+  }
+
+  function insertionSort() {
+    const animations = getInsertionSortAnimations(arr);
+    animateArrayUpdate(animations);
+  }
+
+  function quickSort() {
+    const animations = getQuickSortAnimations(arr);
+    animateArrayUpdate(animations);
+  }
+
+  function animateArrayUpdate(animations) {
     animations.forEach(([comparison, swapped], index) => {
       setTimeout(() => {
         if (!swapped) {
@@ -42,25 +56,6 @@ export default function SortVisualizer(props) {
             const [k, newValue] = comparison;
             const newArr = [...prevArr];
             newArr[k] = newValue;
-            return newArr;
-          });
-        }
-      }, index * DELAY);
-    });
-  }
-
-  function insertionSort() {
-    const animations = getInsertionSortAnimations(arr);
-    animations.forEach(([comparison, swapped], index) => {
-      setTimeout(() => {
-        const [i, j] = comparison;
-        if (!swapped) {
-          animateArrayAccess(i);
-          animateArrayAccess(j);
-        } else {
-          setArr(prevArr => {
-            const newArr = [...prevArr];
-            swap(newArr, i, j);
             return newArr;
           });
         }
@@ -99,6 +94,9 @@ export default function SortVisualizer(props) {
         </button>
         <button className="app-button" onClick={insertionSort}>
           Insertion sort
+        </button>
+        <button className="app-button" onClick={quickSort}>
+          Quick sort
         </button>
       </footer>
     </>

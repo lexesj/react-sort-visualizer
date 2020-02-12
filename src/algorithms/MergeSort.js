@@ -1,5 +1,5 @@
 export function getMergeSortAnimations(arr) {
-  const copy = arr.slice();
+  const copy = [...arr];
   const len = copy.length;
   const aux = Array(len);
   const animations = [];
