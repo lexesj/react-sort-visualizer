@@ -12,11 +12,13 @@ const ACCESSED_COLOUR = "turquoise";
 
 export default function SortVisualizer(props) {
   const [arr, setArr] = useState([]);
+  const [isSorting, setIsSorting] = useState(false);
   const containerRef = useRef(null);
 
-  useEffect(initialiseArray, [window.innerWidth, window.innerHeight]);
+  useEffect(initialiseArray, []);
 
   function initialiseArray() {
+    if (isSorting) return;
     const arr = [];
     for (let i = 0; i < ARR_LEN; i++) {
       arr.push(randIntRange(MIN_NUM, MAX_NUM));
@@ -40,6 +42,8 @@ export default function SortVisualizer(props) {
   }
 
   function animateArrayUpdate(animations) {
+    if (isSorting) return;
+    setIsSorting(true);
     animations.forEach(([comparison, swapped], index) => {
       setTimeout(() => {
         if (!swapped) {
@@ -61,6 +65,7 @@ export default function SortVisualizer(props) {
         }
       }, index * DELAY);
     });
+    setTimeout(() => setIsSorting(false), animations.length * DELAY);
   }
 
   function animateArrayAccess(index) {
