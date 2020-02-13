@@ -9,16 +9,20 @@ const MIN_NUM = 5;
 const MAX_NUM = 80;
 const DELAY = 5;
 const ACCESSED_COLOUR = "turquoise";
+const SORTED_COLOUR = "green";
 
 export default function SortVisualizer(props) {
   const [arr, setArr] = useState([]);
   const [isSorting, setIsSorting] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(initialiseArray, []);
 
   function initialiseArray() {
     if (isSorting) return;
+    if (isSorted) resetArrayColour();
+    setIsSorted(false);
     const arr = [];
     for (let i = 0; i < ARR_LEN; i++) {
       arr.push(randIntRange(MIN_NUM, MAX_NUM));
@@ -65,7 +69,11 @@ export default function SortVisualizer(props) {
         }
       }, index * DELAY);
     });
-    setTimeout(() => setIsSorting(false), animations.length * DELAY);
+    setTimeout(() => {
+      animateSortedArray();
+      setIsSorted(true);
+      setIsSorting(false);
+    }, animations.length * DELAY);
   }
 
   function animateArrayAccess(index) {
@@ -77,6 +85,25 @@ export default function SortVisualizer(props) {
     setTimeout(() => {
       arrayBarStyle.backgroundColor = "";
     }, DELAY * 2);
+  }
+
+  function animateSortedArray() {
+    const arrayBars = containerRef.current.children;
+    for (let i = 0; i < arrayBars.length; i++) {
+      const arrayBarStyle = arrayBars[i].style;
+      setTimeout(
+        () => (arrayBarStyle.backgroundColor = SORTED_COLOUR),
+        i * DELAY
+      );
+    }
+  }
+
+  function resetArrayColour() {
+    const arrayBars = containerRef.current.children;
+    for (let i = 0; i < arr.length; i++) {
+      const arrayBarStyle = arrayBars[i].style;
+      arrayBarStyle.backgroundColor = "";
+    }
   }
 
   return (
