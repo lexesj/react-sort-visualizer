@@ -71,8 +71,6 @@ export default function SortVisualizer(props) {
     });
     setTimeout(() => {
       animateSortedArray();
-      setIsSorted(true);
-      setIsSorting(false);
     }, animations.length * DELAY);
   }
 
@@ -96,6 +94,10 @@ export default function SortVisualizer(props) {
         i * DELAY
       );
     }
+    setTimeout(() => {
+      setIsSorted(true);
+      setIsSorting(false);
+    }, arrayBars.length * DELAY);
   }
 
   function resetArrayColour() {
