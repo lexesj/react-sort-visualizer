@@ -8,13 +8,13 @@ const ARR_LEN = 100;
 const MIN_NUM = 5;
 const MAX_NUM = 80;
 const DELAY = 5;
-const ACCESSED_COLOUR = "blue";
+const ACCESSED_COLOUR = "turquoise";
 
 export default function SortVisualizer(props) {
   const [arr, setArr] = useState([]);
   const containerRef = useRef(null);
 
-  useEffect(initialiseArray, []);
+  useEffect(initialiseArray, [window.innerWidth, window.innerHeight]);
 
   function initialiseArray() {
     const arr = [];
@@ -75,31 +75,44 @@ export default function SortVisualizer(props) {
   }
 
   return (
-    <>
+    <div className="visualizer-container">
       <div className="array-container" ref={containerRef}>
         {arr.map((barHeight, index) => (
           <div
             className="array-bar"
-            style={{ height: `${barHeight}vmin` }}
+            style={{
+              height: `${barHeight}vmin`,
+              width: `${100 / ARR_LEN}vw`
+            }}
             key={index}
           ></div>
         ))}
       </div>
-      <footer>
-        <button className="app-button" onClick={initialiseArray}>
-          Create new array
-        </button>
-        <button className="app-button" onClick={mergeSort}>
-          Merge sort
-        </button>
-        <button className="app-button" onClick={insertionSort}>
-          Insertion sort
-        </button>
-        <button className="app-button" onClick={quickSort}>
-          Quick sort
-        </button>
+      <footer className="app-footer">
+        <ul>
+          <li>
+            <button className="app-button" onClick={initialiseArray}>
+              Create new array
+            </button>
+          </li>
+          <li>
+            <button className="app-button" onClick={mergeSort}>
+              Merge sort
+            </button>
+          </li>
+          <li>
+            <button className="app-button" onClick={insertionSort}>
+              Insertion sort
+            </button>
+          </li>
+          <li>
+            <button className="app-button" onClick={quickSort}>
+              Quick sort
+            </button>
+          </li>
+        </ul>
       </footer>
-    </>
+    </div>
   );
 }
 
