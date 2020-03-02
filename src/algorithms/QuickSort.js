@@ -1,6 +1,6 @@
-import { swap } from "./Utility";
+import { swap } from './Utility';
 
-export default function getQuickSortAnimations(arr) {
+export function getQuickSortAnimations(arr) {
   const copy = [...arr];
   const animations = [];
   quickSortHelper(copy, 0, copy.length - 1, animations);

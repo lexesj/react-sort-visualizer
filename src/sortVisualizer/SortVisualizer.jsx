@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./SortVisualizer.css";
-import getQuickSortAnimations from "../algorithms/QuickSort";
-import { getInsertionSortAnimations } from "../algorithms/InsertionSort";
-import { getMergeSortAnimations } from "../algorithms/MergeSort";
+import React, { useState, useEffect, useRef } from 'react';
+import './SortVisualizer.css';
+import { getQuickSortAnimations } from '../algorithms/QuickSort';
+import { getInsertionSortAnimations } from '../algorithms/InsertionSort';
+import { getMergeSortAnimations } from '../algorithms/MergeSort';
 
 const ARR_LEN = 100;
 const MIN_NUM = 5;
 const MAX_NUM = 80;
 const DELAY = 5;
-const ACCESSED_COLOUR = "turquoise";
-const SORTED_COLOUR = "green";
+const ACCESSED_COLOUR = 'turquoise';
+const SORTED_COLOUR = 'green';
 
 export default function SortVisualizer(props) {
   const [arr, setArr] = useState([]);
@@ -25,8 +25,9 @@ export default function SortVisualizer(props) {
     setIsSorted(false);
     const arr = [];
     for (let i = 0; i < ARR_LEN; i++) {
-      arr.push(randIntRange(MIN_NUM, MAX_NUM));
+      arr.push((MAX_NUM - MIN_NUM) * (i / ARR_LEN) + MIN_NUM);
     }
+    shuffle(arr);
     setArr(arr);
   }
 
@@ -60,7 +61,7 @@ export default function SortVisualizer(props) {
             animateArrayAccess(i);
           }
         } else {
-          setArr(prevArr => {
+          setArr((prevArr) => {
             const [k, newValue] = comparison;
             const newArr = [...prevArr];
             newArr[k] = newValue;
@@ -81,7 +82,7 @@ export default function SortVisualizer(props) {
       arrayBarStyle.backgroundColor = ACCESSED_COLOUR;
     }, DELAY);
     setTimeout(() => {
-      arrayBarStyle.backgroundColor = "";
+      arrayBarStyle.backgroundColor = '';
     }, DELAY * 2);
   }
 
@@ -91,7 +92,7 @@ export default function SortVisualizer(props) {
       const arrayBarStyle = arrayBars[i].style;
       setTimeout(
         () => (arrayBarStyle.backgroundColor = SORTED_COLOUR),
-        i * DELAY
+        i * DELAY,
       );
     }
     setTimeout(() => {
@@ -104,7 +105,7 @@ export default function SortVisualizer(props) {
     const arrayBars = containerRef.current.children;
     for (let i = 0; i < arr.length; i++) {
       const arrayBarStyle = arrayBars[i].style;
-      arrayBarStyle.backgroundColor = "";
+      arrayBarStyle.backgroundColor = '';
     }
   }
 
@@ -116,7 +117,7 @@ export default function SortVisualizer(props) {
             className="array-bar"
             style={{
               height: `${barHeight}vmin`,
-              width: `${100 / ARR_LEN}vw`
+              width: `${100 / ARR_LEN}vw`,
             }}
             key={index}
           ></div>
@@ -150,5 +151,11 @@ export default function SortVisualizer(props) {
   );
 }
 
-const randIntRange = (start, end) =>
-  Math.floor(Math.random() * (end - start + 1) + start);
+const shuffle = (arr) => {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    const temp = arr[i];
+    arr[i] = arr[randomIndex];
+    arr[randomIndex] = temp;
+  }
+};
